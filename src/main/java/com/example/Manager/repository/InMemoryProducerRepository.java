@@ -1,28 +1,35 @@
 package com.example.Manager.repository;
 
 import com.example.Manager.moldes.Product;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.stream.LongStream;
 
 @Repository
+public class InMemoryProducerRepository implements ProductRepository {
+    private static final List<Product> products = Collections.synchronizedList(new LinkedList<>());
 
 
-public class InMemoryProducrRepostiory implements ProductRepository {
-    private final List<Product> products = Collections.synchronizedList(new LinkedList<>());
+    public InMemoryProducerRepository() {
+        LongStream.range(1, 4).forEach(item -> products.add(new Product(
+                item,
+                "Товар №%d".formatted(item),
+                "Описание товара №%d".formatted(item))));
+    }
+
     @Override
-    public List<Product> findlAll() {
+    public List<Product> findAll() {
         return Collections.unmodifiableList(products);
     }
 
     @Override
     public Product save(Product product) {
-        product.setId(this.products.stream()
+        product.setId(products.stream()
                 .max(Comparator.comparingLong(Product::getId))
                 .map(Product::getId)
                 .orElse(0l) + 1);
-        this.products.add(product);
+        products.add(product);
         return product;
     }
     @Override
@@ -31,7 +38,7 @@ public class InMemoryProducrRepostiory implements ProductRepository {
     }
 
     @Override
-    public void deletyId(Long id) {
+    public void deleteId(Long id) {
         products.removeIf(product -> Objects.equals(id,product.getId()));
     }
 }

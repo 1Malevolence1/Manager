@@ -10,13 +10,13 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository {
 
-    public List<Product> findlAll();
+    public List<Product> findAll();
 
     public Product save(Product product);
 
     public Optional<Product> findById(Long id);
 
-    public void deletyId(Long id);
+    public void deleteId(Long id);
 
 
 }
