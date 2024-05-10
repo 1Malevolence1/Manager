@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <title>Редактирвание товара &laquo;[[${product.title}]]&raquo; Барахло</title>
 </head>
-<h1>Редактирование товара &laquo;[[${product.title}]]&raquo;</h1>
+<h1>Редактирование товара &laquo;[[${product.title}]]&raquo;    </h1>
 <body>
 <a data-th-href="@{/catalogue/products/{productId}(productId=${product.id})}">&larr; К товару</a>
+
+<div data-th-if="${errors}">
+    <h2>Допущены ошибки</h2>
+    <ul>
+        <li data-th-each="error: ${errors}" data-th-text="${error}"></li>
+    </ul>
+</div>
 <h1>Редактирование товара</h1>
 <form method="post" data-th-action="@{/catalogue/products/{productId}/edit(productId=${product.id})}">
     <label>
