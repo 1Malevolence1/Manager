@@ -1,4 +1,4 @@
-package com.example.Manager.record;
+package com.example.catalogiueservice.record;
 
 
 import jakarta.validation.constraints.NotBlank;

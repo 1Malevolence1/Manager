@@ -1,7 +1,8 @@
-package com.example.Manager.serivce;
+package com.example.catalogiueservice.serivce;
 
-import com.example.Manager.moldes.Product;
-import com.example.Manager.repository.ProductRepository;
+
+import com.example.catalogiueservice.moldes.Product;
+import com.example.catalogiueservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,10 @@ public class DefaultProductService implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public List<Product> findAllProducts() {
-        return this.productRepository.findAll();
+    public Iterable<Product> findAllProducts(String filter) {
+        if(filter != null && !filter.isBlank()){
+            return productRepository.findAllByTitleLikeIgnoreCase("%" + filter + "%");
+        } else return productRepository.findAll();
     }
 
     @Override
@@ -27,22 +30,24 @@ public class DefaultProductService implements ProductService {
 
     @Override
     public Optional<Product> findProduct(Long productId) {
-        return this.productRepository.findById(productId);
+        return productRepository.findById(productId);
     }
 
     @Override
-    public void updateProduct(Long id, String title, String details) {
+    public void  updateProduct(Long id, String title, String details) {
         this.productRepository.findById(id)
                 .ifPresentOrElse(product -> {
                     product.setTitle(title);
                     product.setDetails(details);
-                }, () -> {
+                    productRepository.save(product);
+                },
+                        () -> {
                     throw new NoSuchElementException();
                 });
     }
 
     @Override
     public void deleteProduct(Long id) {
-        this.productRepository.deleteId(id);
+        this.productRepository.deleteById(id);
     }
 }
